@@ -7,6 +7,8 @@ export default function Letter({ letterPos, attemptValue }) {
     rightWord,
     disabledLetter,
     setDisabledLetter,
+    correctLetter,
+    setCorrectLetter,
     letterEl,
   } = useBoard();
   const word = words[attemptValue][letterPos];
@@ -15,23 +17,27 @@ export default function Letter({ letterPos, attemptValue }) {
 
   useEffect(() => {
     if (word !== "" && !correct && !almost) {
-      setDisabledLetter((word) => [...disabledLetter, word]);
+      setDisabledLetter((disabledLetter) => [...disabledLetter, word]);
+    }
+
+    if (word !== "" && correct) {
+      setCorrectLetter((correctLetter) => [...correctLetter, word]);
     }
   }, [attempt]);
 
   const letterState =
     attempt > attemptValue &&
     (correct
-      ? "bg-green-400 animate-bounce"
+      ? "bg-green-def border-none animate-bounce"
       : almost
-      ? "bg-yellow-400"
-      : "bg-gray-700");
+      ? "bg-yellow-def border-none"
+      : "bg-gray-def border-none");
 
   return (
     <div
       ref={letterEl}
-      className={`text-2xl font-bold p-6 h-16 w-16 flex  justify-center items-center ${
-        letterState ? letterState : "bg-gray-400 "
+      className={`text-3xl font-bold p-6 h-16 w-16 flex text-white justify-center items-center border border-gray-600 ${
+        letterState ? letterState : "bg-black-def "
       }`}
     >
       {word}

@@ -15,6 +15,7 @@ export default function BoardProvider({ children }) {
   const [words, setWords] = useState(wordsDefault);
   const [currAttempt, setCurrAttempt] = useState({ attempt: 0, letterPos: 0 });
   const [disabledLetter, setDisabledLetter] = useState([]);
+  const [correctLetter, setCorrectLetter] = useState([]);
   const { attempt, letterPos } = currAttempt;
   const letterEl = useRef();
 
@@ -27,6 +28,10 @@ export default function BoardProvider({ children }) {
 
   const [wordSet, setWordSet] = useState(new Set());
   const [rightWord, setRightWord] = useState("");
+  const [gameOver, setGameOver] = useState({
+    gameOver: false,
+    wordGuessed: false,
+  });
   useEffect(() => {
     generateWordsSet().then((result) => {
       console.log(result);
@@ -60,10 +65,6 @@ export default function BoardProvider({ children }) {
       curWord += words[attempt][i];
     }
 
-    console.log(row1.current.children);
-
-    console.log(words[attempt]);
-
     if (wordSet.has(curWord.toLowerCase())) {
       setCurrAttempt({ attempt: attempt + 1, letterPos: 0 });
     }
@@ -72,8 +73,13 @@ export default function BoardProvider({ children }) {
         return letter === curWord[i];
       })
     ) {
-      console.log("aayay");
-      setCurrAttempt({ attempt: 6, letterPos: 5 });
+      setGameOver({ gameOver: true, guessedWord: true });
+      return;
+    }
+
+    if (attempt == 5) {
+      alert("you loser");
+      setGameOver({ gameOver: true, guessedGame: false });
     }
   };
   return (
@@ -89,13 +95,11 @@ export default function BoardProvider({ children }) {
         letterPos,
         disabledLetter,
         setDisabledLetter,
+        correctLetter,
+        setCorrectLetter,
         letterEl,
-        row1,
-        row2,
-        row3,
-        row4,
-        row5,
-        row6,
+        gameOver,
+        setGameOver,
       }}
     >
       {children}

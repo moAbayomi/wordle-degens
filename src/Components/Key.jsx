@@ -2,7 +2,8 @@ import { useBoard } from "./BoardProvider";
 import { useEffect, useCallback } from "react";
 
 export default function Key({ keyVal, bigkey }) {
-  const { onSelectKey, onDelete, onEnter, disabledLetter } = useBoard();
+  const { onSelectKey, onDelete, onEnter, disabledLetter, correctLetter } =
+    useBoard();
   function selectKey(key) {
     if (key == "ENTER") {
       onEnter();
@@ -34,7 +35,7 @@ export default function Key({ keyVal, bigkey }) {
       <div
         id="letter"
         onClick={() => selectKey(keyVal)}
-        className={`rounded-sm p-6 cursor-pointer col-span-2 uppercase flex justify-center items-center font-bold border-1 border-gray-100`}
+        className={`rounded-sm p-6 cursor-pointer col-span-2 uppercase flex justify-center items-center font-bold`}
       >
         {keyVal}
       </div>
@@ -47,7 +48,11 @@ export default function Key({ keyVal, bigkey }) {
         className={`rounded-md p-6 ${
           bigkey ? "min-w-12" : ""
         } cursor-pointer uppercase text-white flex justify-center items-center font-bold ${
-          disabledLetter.includes(keyVal) ? "bg-gray-900" : "bg-gray-700"
+          disabledLetter.includes(keyVal)
+            ? "bg-gray-def"
+            : correctLetter.includes(keyVal)
+            ? "bg-green-def"
+            : "bg-lightGray-def"
         }`}
       >
         {keyVal}
