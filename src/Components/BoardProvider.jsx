@@ -56,6 +56,39 @@ export default function BoardProvider({ children }) {
     setWords(newBoard);
   }
 
+  const triggerAnimation = (ref) => {
+    console.log("ayay");
+    if (ref.current) {
+      Array.from(ref.current.children).forEach((box, index) => {
+        setTimeout(() => {
+          box.classList.add("animate-flip");
+          if (box.textContent == rightWord[index]) {
+            setTimeout(() => {
+              box.classList.add("bg-green-def");
+            }, 500);
+          } else if (
+            rightWord.includes(box.textContent) &&
+            box.textContent !== "" &&
+            box.textContent !== rightWord[index]
+          ) {
+            setTimeout(() => {
+              box.classList.add("bg-yellow-def");
+            }, 500);
+          } else {
+            setTimeout(() => {
+              box.classList.add("bg-gray-def");
+            }, 500);
+          }
+        }, index * 500); // Delay each animation by 500ms
+      });
+
+      setTimeout(() => {
+        Array.from(ref.current.children).forEach((box) => {
+          box.classList.remove("animate-flip");
+        });
+      }, ref.current.children.length * 500); // Remove the animation class after all animations have completed
+    }
+  };
   const onEnter = function () {
     if (letterPos !== 5) return;
 
@@ -64,8 +97,23 @@ export default function BoardProvider({ children }) {
     for (let i = 0; i < 5; i++) {
       curWord += words[attempt][i];
     }
+    const correct = rightWord[letterPos] == curWord;
+    const almost = !correct && curWord !== "" && rightWord.includes(curWord);
 
     if (wordSet.has(curWord.toLowerCase())) {
+      if (attempt == 0) {
+        triggerAnimation(row1);
+      } else if (attempt == 1) {
+        triggerAnimation(row2);
+      } else if (attempt == 2) {
+        triggerAnimation(row3);
+      } else if (attempt == 3) {
+        triggerAnimation(row4);
+      } else if (attempt == 4) {
+        triggerAnimation(row5);
+      } else {
+        triggerAnimation(row6);
+      }
       setCurrAttempt({ attempt: attempt + 1, letterPos: 0 });
     }
     if (
@@ -82,6 +130,7 @@ export default function BoardProvider({ children }) {
       setGameOver({ gameOver: true, guessedGame: false });
     }
   };
+
   return (
     <BoardContext.Provider
       value={{
@@ -100,6 +149,12 @@ export default function BoardProvider({ children }) {
         letterEl,
         gameOver,
         setGameOver,
+        row1,
+        row2,
+        row3,
+        row4,
+        row5,
+        row6,
       }}
     >
       {children}

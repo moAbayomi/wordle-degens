@@ -25,19 +25,21 @@ export default function Letter({ letterPos, attemptValue }) {
     }
   }, [attempt]);
 
-  const letterState =
+  /* const letterState =
     attempt > attemptValue &&
     (correct
-      ? "bg-green-def border-none animate-bounce"
+      ? "bg-green-def border-none"
       : almost
       ? "bg-yellow-def border-none"
-      : "bg-gray-def border-none");
+      : "bg-gray-def border-none"); */
+
+  const letterState = false;
 
   return (
     <div
       ref={letterEl}
       className={`text-3xl font-bold p-6 h-16 w-16 flex text-white justify-center items-center border border-gray-600 ${
-        letterState ? letterState : "bg-black-def "
+        letterState ? letterState : "bg-black-def"
       }`}
     >
       {word}
