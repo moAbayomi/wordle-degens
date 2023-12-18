@@ -31,10 +31,20 @@ export default {
 
           "100%": { transform: "rotateX(0.deg)" },
         },
+
+        shake: {
+          "0%": { transform: "translateX(0.75rem)" },
+          "20%": { transform: "translateX(-0.75rem)" },
+          "50%": { transform: "translateX(0.5rem)" },
+          "70%": { transform: "translateX(-0.25rem)" },
+          "90%": { transform: "translateX(0.25rem)" },
+          "100%": { transform: "translateX(0rem)" },
+        },
       },
 
       animation: {
         flip: "flip 500ms linear",
+        shake: "shake 500ms linear",
       },
     },
     plugins: [],

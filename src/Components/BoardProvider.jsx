@@ -29,9 +29,11 @@ export default function BoardProvider({ children }) {
   const [wordSet, setWordSet] = useState(new Set());
   const [rightWord, setRightWord] = useState("");
   const [gameOver, setGameOver] = useState({
-    gameOver: false,
+    gameDone: false,
     wordGuessed: false,
   });
+
+  const { gameDone, wordGuessed } = gameOver;
   useEffect(() => {
     generateWordsSet().then((result) => {
       console.log(result);
@@ -56,12 +58,14 @@ export default function BoardProvider({ children }) {
     setWords(newBoard);
   }
 
-  const triggerAnimation = (ref) => {
-    console.log("ayay");
+  const triggerAnimation = (ref, success = true) => {
+    let classProp = "";
+    success ? (classProp = "animate-flip") : (classProp = "animate-shake");
+    // maybe fixing the success into here might do something ??
     if (ref.current) {
       Array.from(ref.current.children).forEach((box, index) => {
         setTimeout(() => {
-          box.classList.add("animate-flip");
+          box.classList.add(classProp);
           if (box.textContent == rightWord[index]) {
             setTimeout(() => {
               box.classList.add("bg-green-def");
@@ -115,19 +119,33 @@ export default function BoardProvider({ children }) {
         triggerAnimation(row6);
       }
       setCurrAttempt({ attempt: attempt + 1, letterPos: 0 });
+    } else {
+      if (attempt == 0) {
+        triggerAnimation(row1, false);
+      } else if (attempt == 1) {
+        triggerAnimation(row2, false);
+      } else if (attempt == 2) {
+        triggerAnimation(row3, false);
+      } else if (attempt == 3) {
+        triggerAnimation(row4, false);
+      } else if (attempt == 4) {
+        triggerAnimation(row5, false);
+      } else {
+        triggerAnimation(row6, false);
+      }
     }
     if (
       rightWord.split("").every((letter, i) => {
         return letter === curWord[i];
       })
     ) {
-      setGameOver({ gameOver: true, guessedWord: true });
+      setCurrAttempt({ attempt: 7, letterPos: 6 });
+      setGameOver({ gameDone: true, wordGuessed: true });
       return;
     }
 
     if (attempt == 5) {
-      alert("you loser");
-      setGameOver({ gameOver: true, guessedGame: false });
+      setGameOver({ gameDone: true, wordGuessed: false });
     }
   };
 
@@ -149,6 +167,8 @@ export default function BoardProvider({ children }) {
         letterEl,
         gameOver,
         setGameOver,
+        gameDone,
+        wordGuessed,
         row1,
         row2,
         row3,
